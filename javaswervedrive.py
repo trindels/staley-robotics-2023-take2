@@ -2,8 +2,8 @@ from wpimath.controller import PIDController, ProfiledPIDController, SimpleMotor
 from wpimath.geometry import Translation2d, Rotation2d
 from wpimath.kinematics import ChassisSpeeds, SwerveDrive4Kinematics, SwerveDrive4Odometry, SwerveModulePosition, SwerveModuleState
 from wpimath.trajectory import TrapezoidProfile
-from ctre import WPI_TalonFX, FeedbackDevice
-from ctre.sensors import WPI_Pigeon2, WPI_CANCoder
+from ctre import * #WPI_TalonFX, FeedbackDevice, *
+from ctre.sensors import * #WPI_Pigeon2, WPI_CANCoder
 
 from wpilib import SmartDashboard
 
@@ -110,9 +110,22 @@ class JavaSwerveModule:
         self.m_turningMotor = WPI_TalonFX(turningId, "canivore1")
         self.m_turningSensor = WPI_CANCoder(sensorId, "canivore1")
 
+        self.m_driveMotor.configFactoryDefault()
+        self.m_turningMotor.configFactoryDefault()
+        self.m_turningSensor.configFactoryDefault()
+
+        #cancodercfg = CANCoderConfiguration()
+        #cancodercfg.sensorDirection = False
+        #cancodercfg.sensorTimeBase.Per100Ms_Legacy = True
+        #self.m_turningSensor.configAllSettings()
+
         self.m_driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor)
         self.m_turningMotor.configRemoteFeedbackFilter(self.m_turningSensor,0)
         self.m_turningMotor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0)
+
+        self.m_driveMotor.setSensorPhase( False )
+        self.m_turningMotor.setSensorPhase( False )
+        self.m_turningSensor.configSensorDirection( False )
 
         self.m_driveEncoder = self.m_driveMotor.getSensorCollection()
         self.m_turningEncoder = self.m_turningMotor.getSensorCollection()
