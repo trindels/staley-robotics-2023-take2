@@ -52,7 +52,8 @@ class SwerveModule:
                  driveEncoderChannelA,
                  driveEncoderChannelB,
                  turningEncoderChannelA,
-                 turningEncoderChannelB):
+                 turningEncoderChannelB,
+                 turnOffset):
         self.m_turningEncoder = Encoder(turningEncoderChannelA, turningEncoderChannelB)
         self.m_driveEncoder = Encoder(driveEncoderChannelA, driveEncoderChannelB)
 
@@ -67,7 +68,8 @@ class SwerveModule:
         self.m_turningMotor.setInverted(True)
 
         self.m_driveMotor.setSelectedSensorPosition(0)
-        self.m_turningMotor.setSelectedSensorPosition(0)
+        currentPos = self.m_turningMotor.getSensorCollection().getIntegratedSensorAbsolutePosition()
+        self.m_turningMotor.setSelectedSensorPosition( currentPos - turnOffset )
 
         self.m_driveMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
         self.m_turningMotor.configSelectedFeedbackSensor(ctre.FeedbackDevice.IntegratedSensor)
